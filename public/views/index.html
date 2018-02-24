@@ -59,11 +59,19 @@
 
       </div>
 
-      <div class="col-xs-12 col-md-4 col-gray">
-        <h2 translate>About</h2>
-        <p translate><strong>insight</strong>  is an <a href="https://insight.is/"
-          target="_blank">open-source Bitcoin blockchain explorer</a> with complete REST and websocket APIs that can be used for writing web wallets and other apps  that need more advanced blockchain queries than provided by bitcoind RPC.  Check out the <a href="https://github.com/bitpay/insight-ui" target="_blank">source code</a>.</p>
-        <p translate><strong>insight</strong> is still in development, so be sure to report any bugs and provide feedback for improvement at our <a href="https://github.com/bitpay/insight-ui/issues" target="_blank">github issue tracker</a>.</p>
+      <div class="col-xs-12 col-md-4 col-gray" data-ng-controller="BlockReportController" data-ng-init="report()">
+        <h2 translate>General Info:</h2>
+        <p translate>Circulating Supply: <strong>{{blockreport.TotalSupply  | number: 2}} FLASH</strong></p>
+        <p translate>Total Transaction Fee: <strong>{{blockreport.TotalMiningFee  | number: 8}} FLASH</strong></p>
+        <p translate>Total Blocks: <strong>{{blockreport.TotalBlock | number: 0}}</strong></p>
+        <p translate>Addresses with Balance: <strong>{{blockreport.TotalAddress | number: 0}}</strong></p>
+        <p translate>Total Transactions: <strong>{{blockreport.TotalTransaction | number: 0}}</strong></p>
+
+        <div id="powered" class="row"><div class="powered-text">
+          <small class="text-muted" translate></small>
+        </div></div>
+        <p translate><strong>FlashCoin.io blockchain</strong>  is an <a href="http://blockchain.FlashCoin.io/"
+          target="_blank">Blockchain Explorer</a> with complete REST and websocket APIs that can be used for writing web wallets and other apps.</p>
         <div id="powered" class="row">
           <div class="powered-text">
             <small class="text-muted" translate>Powered by</small>

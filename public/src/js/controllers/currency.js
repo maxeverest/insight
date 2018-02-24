@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('insight.currency').controller('CurrencyController',
-  function($scope, $rootScope, Currency) {
+  function($scope, $rootScope, $http, Currency) {
     $rootScope.currency.symbol = defaultCurrency;
 
     var _roundFloat = function(x, n) {
@@ -18,17 +18,17 @@ angular.module('insight.currency').controller('CurrencyController',
 
         var response;
 
-        if (this.symbol === 'USD') {
-          response = _roundFloat((value * this.factor), 2);
-        } else if (this.symbol === 'mBTC') {
-          this.factor = 1000;
+        if (this.symbol === $rootScope.defaultUSD) {
+          response = _roundFloat((value * 0.01 * this.factor), 5);
+        } else if (this.symbol === $rootScope.defaultMicroCoinUnit) {
+          this.factor = 10; // 10x for flashcoin.io - 1/1000x multiple 18Mar2017
           response = _roundFloat((value * this.factor), 5);
-        } else if (this.symbol === 'bits') {
-          this.factor = 1000000;
+        } else if (this.symbol === $rootScope.defaultBits) {
+          this.factor = 10000; // 10x for flashcoin.io - 1/1000x multiple 18Mar2017
           response = _roundFloat((value * this.factor), 2);
-        } else { // assumes symbol is BTC
-          this.factor = 1;
-          response = _roundFloat((value * this.factor), 8);
+        } else {
+          this.factor = 0.01; // 10x for flashcoin.io- 1/1000x multiple 18Mar2017
+          response = _roundFloat((value * this.factor), 2);
         }
         // prevent sci notation
         if (response < 1e-7) response=response.toFixed(8);
@@ -43,22 +43,36 @@ angular.module('insight.currency').controller('CurrencyController',
       $rootScope.currency.symbol = currency;
       localStorage.setItem('insight-currency', currency);
 
-      if (currency === 'USD') {
-        Currency.get({}, function(res) {
-          $rootScope.currency.factor = $rootScope.currency.bitstamp = res.data.bitstamp;
+      if (currency === $rootScope.defaultUSD) {
+        // Currency.get({}, function(res) {
+        //   $rootScope.currency.factor = $rootScope.currency.bitstamp = res.data.bitstamp;
+        // });
+        $http.get('https://api.coinmarketcap.com/v1/ticker/flash/')
+        .success(function(data) {
+            $rootScope.currency.factor = data[0].price_usd;
+        })
+        .error(function(err) {
+            $rootScope.currency.factor = 1;
         });
-      } else if (currency === 'mBTC') {
-        $rootScope.currency.factor = 1000;
-      } else if (currency === 'bits') {
-        $rootScope.currency.factor = 1000000;
+      } else if (currency === $rootScope.defaultMicroCoinUnit) {
+        $rootScope.currency.factor = 10; // 10x for flashcoin.io- 1000x multiple 18Mar2017
+      } else if (currency === $rootScope.defaultBits) {
+        $rootScope.currency.factor = 10000; // 10x for flashcoin.io- 1000x multiple 18Mar2017
       } else {
-        $rootScope.currency.factor = 1;
+        $rootScope.currency.factor = 0.01; // 10x for flashcoin.io- 1000x multiple 18Mar2017
       }
     };
 
     // Get initial value
-    Currency.get({}, function(res) {
-      $rootScope.currency.factor = $rootScope.currency.bitstamp = res.data.bitstamp;
-    });
+    // Currency.get({}, function(res) {
+    //   $rootScope.currency.factor = $rootScope.currency.bitstamp = res.data.bitstamp;
+    // });
 
+    $http.get('https://api.coinmarketcap.com/v1/ticker/flash/')
+    .success(function(data) {
+        $rootScope.currency.factor = data[0].price_usd;
+    })
+    .error(function(err) {
+        $rootScope.currency.factor = 1;
+    });
   });

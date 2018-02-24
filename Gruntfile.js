@@ -1,7 +1,5 @@
 'use strict';
 
-// var config = require('insight-config.json');
-
 module.exports = function(grunt) {
 
   //Load NPM tasks
@@ -12,27 +10,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-markdown');
   grunt.loadNpmTasks('grunt-macreload');
   grunt.loadNpmTasks('grunt-angular-gettext');
-  grunt.loadNpmTasks('grunt-replace');
 
   // Project Configuration
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    replace: {
-      dist: {
-        options: {
-          patterns: [
-            {
-              match: 'INSIGHT_API_PREFIX',
-              replacement: '<%= pkg.insightConfig.apiPrefix %>'
-            }
-          ],
-          usePrefix: false
-        },
-        files: [
-          {src: ['public/src/templates/api.js'], dest: 'public/src/js/services/api.js'}
-        ]
-      }
-    },
     concat: {
       options: {
         process: function(src, filepath) {
@@ -48,10 +29,10 @@ module.exports = function(grunt) {
         src: ['public/src/js/ios-imagefile-megapixel/megapix-image.js', 'public/lib/qrcode-generator/js/qrcode.js', 'public/src/js/jsqrcode/grid.js', 'public/src/js/jsqrcode/version.js', 'public/src/js/jsqrcode/detector.js', 'public/src/js/jsqrcode/formatinf.js', 'public/src/js/jsqrcode/errorlevel.js', 'public/src/js/jsqrcode/bitmat.js', 'public/src/js/jsqrcode/datablock.js', 'public/src/js/jsqrcode/bmparser.js', 'public/src/js/jsqrcode/datamask.js', 'public/src/js/jsqrcode/rsdecoder.js', 'public/src/js/jsqrcode/gf256poly.js', 'public/src/js/jsqrcode/gf256.js', 'public/src/js/jsqrcode/decoder.js', 'public/src/js/jsqrcode/qrcode.js', 'public/src/js/jsqrcode/findpat.js', 'public/src/js/jsqrcode/alignpat.js', 'public/src/js/jsqrcode/databr.js', 'public/lib/momentjs/min/moment.min.js', 'public/lib/moment/lang/es.js', 'public/lib/zeroclipboard/ZeroClipboard.min.js'],
         dest: 'public/js/vendors.js'
       },
-      angular: {
-        src: ['public/lib/angular/angular.min.js', 'public/lib/angular-resource/angular-resource.min.js', 'public/lib/angular-route/angular-route.min.js', 'public/lib/angular-qrcode/qrcode.js', 'public/lib/angular-animate/angular-animate.min.js', 'public/lib/angular-bootstrap/ui-bootstrap.js', 'public/lib/angular-bootstrap/ui-bootstrap-tpls.js', 'public/lib/angular-ui-utils/ui-utils.min.js', 'public/lib/ngprogress/build/ngProgress.min.js', 'public/lib/angular-gettext/dist/angular-gettext.min.js', 'public/lib/angular-moment/angular-moment.min.js'],
-        dest: 'public/js/angularjs-all.js'
-      },
+      //angular: {
+      //  src: ['public/lib/angular/angular.min.js', 'public/lib/angular-resource/angular-resource.min.js', 'public/lib/angular-route/angular-route.min.js', 'public/lib/angular-qrcode/qrcode.js', 'public/lib/angular-animate/angular-animate.min.js', 'public/lib/angular-bootstrap/ui-bootstrap.js', 'public/lib/angular-bootstrap/ui-bootstrap-tpls.js', 'public/lib/angular-ui-utils/ui-utils.min.js', 'public/lib/ngprogress/build/ngProgress.min.js', 'public/lib/angular-gettext/dist/angular-gettext.min.js', 'public/lib/angular-moment/angular-moment.min.js'],
+      //  dest: 'public/js/angularjs-all.js'
+      //},
       main: {
         src: ['public/src/js/app.js', 'public/src/js/controllers/*.js', 'public/src/js/services/*.js', 'public/src/js/directives.js', 'public/src/js/filters.js', 'public/src/js/config.js', 'public/src/js/init.js', 'public/src/js/translations.js'],
         dest: 'public/js/main.js'
@@ -70,10 +51,10 @@ module.exports = function(grunt) {
         src: 'public/js/vendors.js',
         dest: 'public/js/vendors.min.js'
       },
-      angular: {
-        src: 'public/js/angularjs-all.js',
-        dest: 'public/js/angularjs-all.min.js'
-      },
+      //angular: {
+      //  src: 'public/js/angularjs-all.js',
+      //  dest: 'public/js/angularjs-all.min.js'
+      //},
       main: {
         src: 'public/js/main.js',
         dest: 'public/js/main.min.js'
@@ -136,13 +117,13 @@ module.exports = function(grunt) {
   grunt.option('force', true);
 
   //Default task(s).
-  grunt.registerTask('default', ['replace', 'watch']);
+  grunt.registerTask('default', ['watch']);
 
   //Update .pot file
   grunt.registerTask('translate', ['nggettext_extract']);
 
   //Compile task (concat + minify)
-  grunt.registerTask('compile', ['replace', 'nggettext_compile', 'concat', 'uglify', 'cssmin']);
+  grunt.registerTask('compile', ['nggettext_compile', 'concat', 'uglify', 'cssmin']);
 
 
 };
